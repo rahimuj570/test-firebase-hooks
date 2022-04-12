@@ -1,11 +1,28 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Link, useNavigate } from "react-router-dom";
+import auth from "./firebase.int";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+  const navigate = useNavigate();
   return (
     <div>
       <div className="mx-auto mt-10 w-full max-w-xs">
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            signInWithEmailAndPassword(email, password);
+            if (!error) {
+              navigate("/");
+            }
+          }}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        >
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
@@ -14,6 +31,7 @@ const Login = () => {
               Email
             </label>
             <input
+              onBlur={(e) => setEmail(e.target.value)}
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="Email"
@@ -29,6 +47,7 @@ const Login = () => {
               Password
             </label>
             <input
+              onBlur={(e) => setPassword(e.target.value)}
               className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
