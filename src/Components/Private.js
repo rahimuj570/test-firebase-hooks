@@ -1,3 +1,4 @@
+import { signOut } from "firebase/auth";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "./firebase.int";
@@ -18,7 +19,10 @@ const Private = () => {
         Your Email is {user.email}
       </h1>
       <div className="text-center">
-        <button className="hover:bg-red-500 duration-300 py-2 rounded-lg px-4 bg-red-400 text-white font-bold">
+        <button
+          onClick={() => signOut(auth)}
+          className="hover:bg-red-500 duration-300 py-2 rounded-lg px-4 bg-red-400 text-white font-bold"
+        >
           Log Out
         </button>
       </div>
