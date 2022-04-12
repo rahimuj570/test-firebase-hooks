@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "./firebase.int";
 
 const Login = () => {
@@ -10,6 +10,8 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
   const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   return (
     <div>
       <div className="mx-auto mt-10 w-full max-w-xs">
@@ -18,8 +20,9 @@ const Login = () => {
             e.preventDefault();
             signInWithEmailAndPassword(email, password);
             if (!error) {
-              navigate("/");
+              navigate(from, { replace: true });
             }
+            console.log("Error", error);
           }}
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
@@ -53,9 +56,7 @@ const Login = () => {
               type="password"
               placeholder="******************"
             />
-            <p className="text-red-500 text-xs italic">
-              Please choose a password.
-            </p>
+            <p className="text-red-500 text-xs italic">{error}</p>
           </div>
           <div className="flex items-center justify-between">
             <button
